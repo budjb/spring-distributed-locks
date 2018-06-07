@@ -1,3 +1,43 @@
-dependencies {
-    compile 'org.springframework.boot:spring-boot-starter'
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId project.group
+            artifactId project.name
+            version project.version
+
+            pom.withXml { XmlProvider xmlProvider ->
+                Node pomNode = asNode()
+                pomNode.dependencyManagement.replaceNode {}
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv(bintrayUsernameEnvVar)
+    key = System.getenv(bintrayKeyEnvVar)
+    publish = true
+
+    pkg {
+        websiteUrl = 'https://github.com/budjb/spring-distributed-locks'
+        issueTrackerUrl = 'https://github.com/budjb/spring-distributed-locks/issues'
+        vcsUrl = 'git@github.com:budjb/spring-distributed-locks.git'
+        githubRepo = 'budjb/spring-distributed-locks'
+
+        desc = 'Core interfaces of a distributed mutex locking library for Spring Boot.'
+        labels = ['spring-boot', 'spring-framework', 'mutex']
+        repo = 'spring'
+        name = project.name
+        licenses = ['Apache-2.0']
+        publications = ['library']
+
+        version {
+            name = project.version
+            released = new Date()
+            vcsTag = project.version
+        }
+    }
 }

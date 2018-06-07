@@ -8,7 +8,10 @@ public interface DistributedLock extends Lock {
      * Attempts to acquire a lock with and a lock timeout iff the lock is available.
      *
      * @param leaseTime The amount of time to wait for the lock to become available.
-     * @param timeUnit  The time unit of {@see waitTime}.
+     * @param timeUnit  The time unit of waitTime.
+     * @throws InterruptedException if the current thread is
+     *                              interrupted while acquiring the lock (and interruption
+     *                              of lock acquisition is supported)
      */
     void lock(long leaseTime, TimeUnit timeUnit) throws InterruptedException;
 
@@ -19,10 +22,13 @@ public interface DistributedLock extends Lock {
      * will return {@code true}. If the wait timeout is reached, the lock is not acquired.
      *
      * @param waitTime      The amount of time to wait for the lock to become available.
-     * @param waitTimeUnit  The time unit of {@see waitTime}.
+     * @param waitTimeUnit  The time unit of waitTime.
      * @param leaseTime     The amount of time that lock should be considered valid.
-     * @param leaseTimeUnit The time unit of {@see lockTime}.
+     * @param leaseTimeUnit The time unit of lockTime.
      * @return Whether the lock was acquired.
+     * @throws InterruptedException if the current thread is
+     *                              interrupted while acquiring the lock (and interruption
+     *                              of lock acquisition is supported)
      */
     boolean tryLock(long waitTime, TimeUnit waitTimeUnit, long leaseTime, TimeUnit leaseTimeUnit) throws InterruptedException;
 
