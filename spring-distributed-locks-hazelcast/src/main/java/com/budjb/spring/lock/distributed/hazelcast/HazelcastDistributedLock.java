@@ -89,6 +89,14 @@ public class HazelcastDistributedLock implements DistributedLock {
      * {@inheritDoc}
      */
     @Override
+    public boolean supportsLeases() {
+        return true;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public Condition newCondition() {
         return lock.newCondition();
     }
