@@ -38,4 +38,13 @@ public interface DistributedLock extends Lock {
      * @return Whether the lock instance believes is currently owns the lock.
      */
     boolean isLocked();
+
+    /**
+     * Returns whether the distributed lock implementation support leases.
+     * <p>
+     * If {@code false}, the behavior of the lease-aware methods is undefined.
+     *
+     * @return Whether leases are supported.
+     */
+    boolean supportsLeases();
 }
