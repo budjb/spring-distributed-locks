@@ -4,7 +4,6 @@ dependencyManagement {
 
 dependencies {
     compile project(':spring-distributed-locks')
-    compile 'org.springframework.boot:spring-boot-starter'
     compile 'com.hazelcast:hazelcast-all:3.9.1'
 
     optional "org.springframework.boot:spring-boot-configuration-processor"

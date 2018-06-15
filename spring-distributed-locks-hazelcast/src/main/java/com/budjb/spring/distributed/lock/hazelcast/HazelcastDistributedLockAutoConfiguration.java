@@ -1,4 +1,4 @@
-package com.budjb.spring.lock.distributed.hazelcast;
+package com.budjb.spring.distributed.lock.hazelcast;
 
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;

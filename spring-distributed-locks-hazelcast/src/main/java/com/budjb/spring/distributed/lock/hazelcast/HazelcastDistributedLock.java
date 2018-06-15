@@ -1,4 +1,4 @@
-package com.budjb.spring.lock.distributed.hazelcast;
+package com.budjb.spring.distributed.lock.hazelcast;
 
 import com.budjb.spring.distributed.lock.DistributedLock;
 import com.hazelcast.core.ILock;

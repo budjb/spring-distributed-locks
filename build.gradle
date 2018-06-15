@@ -13,6 +13,7 @@ buildscript {
 }
 
 subprojects {
+    apply plugin: 'groovy'
     apply plugin: 'java'
     apply plugin: 'propdeps'
     apply plugin: 'propdeps-maven'
@@ -29,8 +30,16 @@ subprojects {
         mavenCentral()
     }
 
+    dependencyManagement {
+        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+    }
+
     dependencies {
+        compile 'org.springframework.boot:spring-boot-starter'
+
         testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+        testCompile 'cglib:cglib-nodep:3.2.6'
+        testCompile 'org.objenesis:objenesis:2.6'
     }
 
     compileJava.dependsOn(processResources)

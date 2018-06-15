@@ -28,7 +28,7 @@ public class ReentrantDistributedLock implements DistributedLock {
      * {@inheritDoc}
      */
     @Override
-    public void lock(long leaseTime, TimeUnit timeUnit) throws InterruptedException {
+    public void lock(long leaseTime, TimeUnit timeUnit) {
         throw new UnsupportedOperationException();
     }
 
@@ -36,7 +36,7 @@ public class ReentrantDistributedLock implements DistributedLock {
      * {@inheritDoc}
      */
     @Override
-    public boolean tryLock(long waitTime, TimeUnit waitTimeUnit, long leaseTime, TimeUnit leaseTimeUnit) throws InterruptedException {
+    public boolean tryLock(long waitTime, TimeUnit waitTimeUnit, long leaseTime, TimeUnit leaseTimeUnit) {
         throw new UnsupportedOperationException();
     }
 
