@@ -12,7 +12,7 @@ buildscript {
     }
 }
 
-subprojects {
+configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(it.name) }) {
     apply plugin: 'groovy'
     apply plugin: 'java'
     apply plugin: 'propdeps'

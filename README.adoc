@@ -1,0 +1,107 @@
+= Spring Distributed Locks
+:toc:
+:version: 0.1.2.BETA
+:group: com.budjb
+
+== Introduction
+
+The distributed locks library is an abstraction of Java's
+https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/Lock.html[Lock] system intended for use with
+distributed/clustered applications. It is useful in situations where applications need to synchronize access to a
+resource or process but they do not share the same runtime environment.
+
+== Quick Start
+
+Using Gradle, make sure the following dependencies are included:
+
+.build.gradle
+[source,groovy,subs="attributes"]
+----
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile "{group}:spring-distributed-locks:{version}"
+}
+----
+
+To use a distributed lock, inject the `distributedLockProvider` bean, from which a distributed lock can be requested.
+
+[source,java]
+----
+@Component
+public class Example {
+    private final DistributedLockProvider distributedLockProvider;
+
+    public Example(DistributedLockProvider distributedLockProvider) {
+        this.distributedLockProvider = distributedLockProvider;
+    }
+
+    public String go() {
+        Lock lock = distributedLockProvider.getDistributedLock("foo");
+
+        if (lock.tryLock()) {
+            try {
+                // lock acquired
+            }
+            finally {
+                lock.unlock();
+            }
+        }
+        else {
+            // lock could not be acquired
+        }
+    }
+}
+----
+
+In addition, an example project can be found at
+https://github.com/budjb/spring-distributed-locks/tree/master/spring-distributed-locks-example.
+
+== Libraries
+
+There are various implementations of the library, depending on the backend being used. Besides the core library, the
+other implementations expose the `distributedLockProvider` bean with their own specific implementation logic.
+
+|===
+| Library | Description
+
+| `{group}:spring-distributed-locks:{version}` | The core implementation of the library, containing a local,
+                                                 non-distributed implementation useful for local development and testing.
+| `{group}:spring-distributed-locks-hazelcast:{version}` | An implementation of the distributed locks library backed by Hazelcast.
+|===
+
+=== Hazelcast
+
+The Hazelcast library uses the existing Hazelcast functionality built into Spring Boot, and will utilize the
+`hazelcastInstance` bean that Spring Boot builds. This means that the same configuration can be used, and the
+Hazelcast implementation of the distributed locks library can be used simply by dropping it into a project.
+
+You can find more details regarding to use and configure Hazelcast with Spring Boot in the official
+https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-hazelcast.html[documentation].
+
+== Custom Implementations
+
+If a custom implementation is required, two interfaces need to be implemented:
+https://github.com/budjb/spring-distributed-locks/blob/master/spring-distributed-locks/src/main/java/com/budjb/spring/distributed/lock/DistributedLockProvider.java[`DistributedLockProvider`] and
+https://github.com/budjb/spring-distributed-locks/blob/master/spring-distributed-locks/src/main/java/com/budjb/spring/distributed/lock/DistributedLock.java[`DistributedLock`].
+
+The `DistributedLock` extends Java's `Lock`, and custom implementations must create their own concrete implementation
+of this interface. These concrete classes are typically decorators for an underlying Lock interface, but the specifics
+of how locks are managed is up to the implementation.
+
+The `DistributedLockProvider` acts as a factory class for a `DistributedLock`, and solely responsible for creating
+`DistributedLock` instances. Locks are mapped to names, so that a single provider may provide distinct locks for
+different names that do not interfere with one another.
+
+== Lock Extensions
+
+The `DistributedLock` also adds for support for leases, which defines the lifetime that a lease may be valid for before
+expiring. Leases are supported on both `lock` and `tryLock` methods. Some underlying `Lock` implementations may not
+supports leases, however, and so lease support is optional and can be queried via the `leasesSupported` method.
+
+When providing a lease time, the lock is only considered acquired during that time period. If a lease expires, the lock
+should be considered available even if it is flagged as currently locked. If the previous holder of the lock attempts
+to unlock the lock, the operation should seem successful but not actually unlock the lock, since it may have been
+subsequently acquired by another process.
