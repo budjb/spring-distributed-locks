@@ -1,7 +1,3 @@
-dependencyManagement {
-    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
-}
-
 dependencies {
     compile project(':spring-distributed-locks')
     compile 'com.hazelcast:hazelcast-all:3.9.1'

@@ -7,11 +7,6 @@ publishing {
             groupId project.group
             artifactId project.name
             version project.version
-
-            pom.withXml { XmlProvider xmlProvider ->
-                Node pomNode = asNode()
-                pomNode.dependencyManagement.replaceNode {}
-            }
         }
     }
 }
