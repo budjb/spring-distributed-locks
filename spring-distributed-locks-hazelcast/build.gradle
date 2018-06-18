@@ -1,0 +1,49 @@
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+dependencies {
+    compile project(':spring-distributed-locks')
+    compile 'com.hazelcast:hazelcast-all:3.9.1'
+
+    optional "org.springframework.boot:spring-boot-configuration-processor"
+}
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            groupId project.group
+            artifactId project.name
+            version project.version
+        }
+    }
+}
+
+bintray {
+    user = System.getenv(bintrayUsernameEnvVar)
+    key = System.getenv(bintrayKeyEnvVar)
+    publish = true
+
+    pkg {
+        websiteUrl = 'https://github.com/budjb/spring-distributed-locks'
+        issueTrackerUrl = 'https://github.com/budjb/spring-distributed-locks/issues'
+        vcsUrl = 'git@github.com:budjb/spring-distributed-locks.git'
+        githubRepo = 'budjb/spring-distributed-locks'
+
+        desc = 'Hazelcast implementation of a distributed mutex locking library for Spring Boot.'
+        labels = ['spring-boot', 'spring-framework', 'mutex', 'hazelcast']
+        repo = 'spring'
+        name = project.name
+        licenses = ['Apache-2.0']
+        publications = ['library']
+
+        version {
+            name = project.version
+            released = new Date()
+            vcsTag = project.version
+        }
+    }
+}
