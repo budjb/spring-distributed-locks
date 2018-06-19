@@ -30,6 +30,8 @@ public class AbstractDistributedLock implements DistributedLock {
 
     /**
      * Returns the underlying lock instance.
+     *
+     * @return The underlying lock instance.
      */
     protected Lock getLock() {
         return lock;
