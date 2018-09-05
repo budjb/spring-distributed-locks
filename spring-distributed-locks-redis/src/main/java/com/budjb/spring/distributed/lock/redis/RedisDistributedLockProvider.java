@@ -14,32 +14,32 @@
  *  limitations under the License.
  */
 
-package com.budjb.spring.distributed.lock.reentrant;
+package com.budjb.spring.distributed.lock.redis;
 
 import com.budjb.spring.distributed.lock.DistributedLock;
 import com.budjb.spring.distributed.lock.DistributedLockProvider;
+import org.redisson.api.RedissonClient;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
-
-/**
- * A non-distributed implementation of a lock provider utilizing {@link ReentrantLock}.
- */
-public class ReentrantDistributedLockProvider implements DistributedLockProvider {
+public class RedisDistributedLockProvider implements DistributedLockProvider {
     /**
-     * Registry of lock names to reentrant lock instances.
+     * Redisson client.
      */
-    final private Map<String, ReentrantLock> registry = new HashMap<>();
+    private final RedissonClient redissonClient;
+
+    /**
+     * Constructor.
+     *
+     * @param redissonClient Redisson client.
+     */
+    public RedisDistributedLockProvider(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public DistributedLock getDistributedLock(String key) {
-        if (!registry.containsKey(key)) {
-            registry.put(key, new ReentrantLock());
-        }
-        return new ReentrantDistributedLock(registry.get(key));
+        return new RedisDistributedLock(redissonClient.getLock(key));
     }
 }

@@ -16,7 +16,7 @@
 
 dependencies {
     compile project(':spring-distributed-locks')
-    compile 'com.hazelcast:hazelcast-all:3.9.1'
+    compile 'org.redisson:redisson-spring-boot-starter:3.8.0'
 
     optional "org.springframework.boot:spring-boot-configuration-processor"
 }
@@ -78,7 +78,7 @@ bintray {
         githubRepo = 'budjb/spring-distributed-locks'
 
         desc = projectDescription
-        labels = ['spring-boot', 'spring-framework', 'mutex', 'hazelcast']
+        labels = ['spring-boot', 'spring-framework', 'mutex', 'redis']
         repo = 'spring'
         name = project.name
         licenses = ['Apache-2.0']

@@ -14,24 +14,24 @@
  *  limitations under the License.
  */
 
-package com.budjb.spring.distributed.lock.hazelcast
+package com.budjb.spring.distributed.lock.redis
 
 import com.budjb.spring.distributed.lock.DistributedLock
 import com.budjb.spring.distributed.lock.DistributedLockProvider
-import com.hazelcast.core.HazelcastInstance
+import org.redisson.api.RedissonClient
 import spock.lang.Specification
 
-class HazelcastDistributedLockProviderSpec extends Specification {
-    def 'The HazelcastDistributedLockProvider proxies requests for a lock to a Hazelcast instance'() {
+class RedisDistributedLockProviderSpec extends Specification {
+    def 'The RedisDistributedLockProvider proxies requests for a lock to a Redis instance'() {
         setup:
-        HazelcastInstance hazelcastInstance = Mock(HazelcastInstance)
-        DistributedLockProvider lockProvider = new HazelcastDistributedLockProvider(hazelcastInstance)
+        RedissonClient redissonClient = Mock(RedissonClient)
+        DistributedLockProvider lockProvider = new RedisDistributedLockProvider(redissonClient)
 
         when:
         DistributedLock lock = lockProvider.getDistributedLock('foo')
 
         then:
-        lock instanceof HazelcastDistributedLock
-        1 * hazelcastInstance.getLock('foo')
+        lock instanceof RedisDistributedLock
+        1 * redissonClient.getLock('foo')
     }
 }

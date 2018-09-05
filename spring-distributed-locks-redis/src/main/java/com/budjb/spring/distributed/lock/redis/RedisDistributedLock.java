@@ -14,109 +14,68 @@
  *  limitations under the License.
  */
 
-package com.budjb.spring.distributed.lock.reentrant;
+package com.budjb.spring.distributed.lock.redis;
 
 import com.budjb.spring.distributed.lock.DistributedLock;
+import org.redisson.api.RLock;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * A non-distributed implementation of a distributed lock utilizing {@link ReentrantLock}.
- */
-public class ReentrantDistributedLock implements DistributedLock {
-    /**
-     * Backing lock.
-     */
-    private final ReentrantLock lock;
+public class RedisDistributedLock implements DistributedLock {
+    private final RLock rLock;
 
-    /**
-     * Constructor.
-     *
-     * @param lock Reentrant lock instance.
-     */
-    public ReentrantDistributedLock(ReentrantLock lock) {
-        this.lock = lock;
+    RedisDistributedLock(RLock rLock) {
+        this.rLock = rLock;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void lock(long leaseTime, TimeUnit timeUnit) {
-        throw new UnsupportedOperationException();
+        rLock.lock(leaseTime, timeUnit);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public boolean tryLock(long waitTime, TimeUnit waitTimeUnit, long leaseTime, TimeUnit leaseTimeUnit) {
-        throw new UnsupportedOperationException();
+    public boolean tryLock(long waitTime, TimeUnit waitTimeUnit, long leaseTime, TimeUnit leaseTimeUnit) throws InterruptedException {
+        return rLock.tryLock(waitTime, leaseTimeUnit.convert(leaseTime, waitTimeUnit), waitTimeUnit);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isLocked() {
-        return lock.isLocked();
+        return rLock.isLocked();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean supportsLeases() {
-        return false;
+        return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void lock() {
-        lock.lock();
+        rLock.lock();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void lockInterruptibly() throws InterruptedException {
-        lock.lockInterruptibly();
+        rLock.lockInterruptibly();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean tryLock() {
-        return lock.tryLock();
+        return rLock.tryLock();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-        return lock.tryLock(time, unit);
+        return rLock.tryLock(time, unit);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void unlock() {
-        lock.unlock();
+        rLock.unlock();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Condition newCondition() {
-        return lock.newCondition();
+        return rLock.newCondition();
     }
 }

@@ -14,16 +14,17 @@
  *  limitations under the License.
  */
 
-package com.budjb.spring.distributed.lock.reentrant
+package com.budjb.spring.distributed.lock.redis;
 
-import spock.lang.Specification
+import org.redisson.api.RedissonClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-class ReentrantDistributedLockProviderSpec extends Specification {
-    def 'The ReentrantDistributedLockProvider returns instances of ReentrantDistributedLock'() {
-        setup:
-        ReentrantDistributedLockProvider provider = new ReentrantDistributedLockProvider()
-
-        expect:
-        provider.getDistributedLock('foo') instanceof ReentrantDistributedLock
+@Configuration
+public class RedisDistributedLockAutoConfiguration {
+    @Bean
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    public RedisDistributedLockProvider distributedLockProvider(RedissonClient redissonClient) {
+        return new RedisDistributedLockProvider(redissonClient);
     }
 }

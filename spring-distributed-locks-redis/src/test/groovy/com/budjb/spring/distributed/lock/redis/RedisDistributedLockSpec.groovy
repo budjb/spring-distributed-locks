@@ -14,25 +14,27 @@
  *  limitations under the License.
  */
 
-package com.budjb.spring.distributed.lock.hazelcast
+package com.budjb.spring.distributed.lock.redis
 
-import com.hazelcast.core.ILock
+
+import org.redisson.api.RLock
 import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit
 
-class HazelcastDistributedLockSpec extends Specification {
-    def 'Hazelcast locks support leases'() {
+class RedisDistributedLockSpec extends Specification {
+    def 'Redis locks support leases'() {
         setup:
-        ILock lock = Mock(ILock)
+        RLock lock = Mock(RLock)
+
         expect:
-        new HazelcastDistributedLock(lock).supportsLeases()
+        new RedisDistributedLock(lock).supportsLeases()
     }
 
     def 'Method calls are proxied to the underlying lock implementation'() {
         setup:
-        ILock hazelcastLock = Mock(ILock)
-        HazelcastDistributedLock lock = new HazelcastDistributedLock(hazelcastLock)
+        RLock rLock = Mock(RLock)
+        RedisDistributedLock lock = new RedisDistributedLock(rLock)
 
         when:
         lock.isLocked()
@@ -46,15 +48,15 @@ class HazelcastDistributedLockSpec extends Specification {
         lock.lock(1, TimeUnit.MICROSECONDS)
 
         then:
-        1 * hazelcastLock.isLocked()
-        1 * hazelcastLock.lock()
-        1 * hazelcastLock.lockInterruptibly()
-        1 * hazelcastLock.tryLock()
-        1 * hazelcastLock.tryLock(1, TimeUnit.MICROSECONDS)
-        1 * hazelcastLock.unlock()
-        1 * hazelcastLock.newCondition()
-        1 * hazelcastLock.tryLock(1, TimeUnit.MICROSECONDS, 1, TimeUnit.MICROSECONDS)
-        1 * hazelcastLock.lock(1, TimeUnit.MICROSECONDS)
+        1 * rLock.isLocked()
+        1 * rLock.lock()
+        1 * rLock.lockInterruptibly()
+        1 * rLock.tryLock()
+        1 * rLock.tryLock(1, TimeUnit.MICROSECONDS)
+        1 * rLock.unlock()
+        1 * rLock.newCondition()
+        1 * rLock.tryLock(1, 1, TimeUnit.MICROSECONDS)
+        1 * rLock.lock(1, TimeUnit.MICROSECONDS)
 
     }
 }
