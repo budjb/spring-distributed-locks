@@ -1,6 +1,6 @@
 = Spring Distributed Locks
 :toc:
-:version: 0.1.4.BETA
+:version: 0.1.8.BETA
 :group: com.budjb
 
 == Introduction

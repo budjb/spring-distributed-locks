@@ -16,7 +16,7 @@
 
 dependencies {
     compile project(':spring-distributed-locks')
-    compile 'org.redisson:redisson-spring-boot-starter:3.8.0'
+    compile 'org.redisson:redisson-spring-boot-starter:3.10.4'
 
     optional "org.springframework.boot:spring-boot-configuration-processor"
 }
