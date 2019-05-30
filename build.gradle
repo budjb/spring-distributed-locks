@@ -66,6 +66,8 @@ configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(i
                 artifact javadocJar
 
                 pom {
+                    name = project.name
+
                     licenses {
                         license {
                             name = 'The Apache License, Version 2.0'
@@ -115,6 +117,11 @@ configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(i
                 gpg {
                     sign = true
                     passphrase = System.getenv('GPG_PASSWORD')
+                }
+                mavenCentralSync {
+                    sync = true
+                    user = System.getenv(sonatypeUsernameEnvVar)
+                    password = System.getenv(sonatypePasswordEnvVar)
                 }
             }
         }

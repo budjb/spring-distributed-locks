@@ -14,6 +14,8 @@
  *  limitations under the License.
  */
 
+description = "Redis implementation of a distributed mutex locking library for Spring Boot"
+
 dependencies {
     api project(':spring-distributed-locks')
     api 'org.redisson:redisson-spring-boot-starter:3.10.4'
@@ -21,9 +23,19 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
+publishing {
+    publications {
+        library(MavenPublication) {
+            pom {
+                description = project.description
+            }
+        }
+    }
+}
+
 bintray {
     pkg {
-        desc = "Redis implementation of a distributed mutex locking library for Spring Boot"
+        desc = project.description
         labels = ['spring-boot', 'spring-framework', 'mutex', 'redis']
     }
 }

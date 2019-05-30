@@ -14,9 +14,21 @@
  *  limitations under the License.
  */
 
+description = "Core interfaces of a distributed mutex locking library for Spring Boot"
+
+publishing {
+    publications {
+        library(MavenPublication) {
+            pom {
+                description = project.description
+            }
+        }
+    }
+}
+
 bintray {
     pkg {
-        desc = "Core interfaces of a distributed mutex locking library for Spring Boot"
+        desc = project.description
         labels = ['spring-boot', 'spring-framework', 'mutex']
     }
 }

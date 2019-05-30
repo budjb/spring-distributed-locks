@@ -16,6 +16,8 @@
 
 apply plugin: 'maven-publish'
 
+description = "Hazelcast implementation of a distributed mutex locking library for Spring Boot"
+
 dependencies {
     api project(':spring-distributed-locks')
     api 'com.hazelcast:hazelcast-all:3.9.1'
@@ -23,9 +25,19 @@ dependencies {
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
+publishing {
+    publications {
+        library(MavenPublication) {
+            pom {
+                description = project.description
+            }
+        }
+    }
+}
+
 bintray {
     pkg {
-        desc = "Hazelcast implementation of a distributed mutex locking library for Spring Boot"
+        desc = project.description
         labels = ['spring-boot', 'spring-framework', 'mutex', 'hazelcast']
     }
 }
