@@ -67,6 +67,8 @@ configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(i
 
                 pom {
                     name = project.name
+                    url = githubHttpsUrl
+                    packaging = 'jar'
 
                     licenses {
                         license {

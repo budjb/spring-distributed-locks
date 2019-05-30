@@ -16,6 +16,7 @@
 
 package com.budjb.spring.distributed.lock.redis;
 
+import com.budjb.spring.distributed.lock.DistributedLockProvider;
 import org.redisson.api.RedissonClient;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -27,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 public class RedisDistributedLockAutoConfiguration {
     @Bean
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public RedisDistributedLockProvider distributedLockProvider(RedissonClient redissonClient) {
+    public DistributedLockProvider distributedLockProvider(RedissonClient redissonClient) {
         return new RedisDistributedLockProvider(redissonClient);
     }
 }

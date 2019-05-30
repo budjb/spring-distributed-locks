@@ -16,6 +16,7 @@
 
 package com.budjb.spring.distributed.lock.hazelcast;
 
+import com.budjb.spring.distributed.lock.DistributedLockProvider;
 import com.hazelcast.core.HazelcastInstance;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
 public class HazelcastDistributedLockAutoConfiguration {
     @Bean
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    public HazelcastDistributedLockProvider distributedLockProvider(HazelcastInstance hazelcastInstance) {
+    public DistributedLockProvider distributedLockProvider(HazelcastInstance hazelcastInstance) {
         return new HazelcastDistributedLockProvider(hazelcastInstance);
     }
 }
