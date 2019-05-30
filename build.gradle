@@ -14,51 +14,33 @@
  *  limitations under the License.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-        maven { setUrl('http://repo.spring.io/plugins-release') }
-    }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE'
-        classpath 'io.spring.gradle:propdeps-plugin:0.0.9.RELEASE'
-        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-    }
+plugins {
+    id 'com.jfrog.bintray' version '1.8.4' apply false
 }
 
 configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(it.name) }) {
     apply plugin: 'groovy'
-    apply plugin: 'java'
-    apply plugin: 'propdeps'
-    apply plugin: 'propdeps-maven'
-    apply plugin: 'propdeps-idea'
-    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
     apply plugin: 'com.jfrog.bintray'
     apply plugin: 'maven-publish'
 
-    version version
     group 'com.budjb'
 
     repositories {
-        jcenter()
         mavenCentral()
-    }
-
-    dependencyManagement {
-        imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+        jcenter()
     }
 
     dependencies {
-        compile 'org.springframework.boot:spring-boot-starter'
+        api platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        api 'org.springframework.boot:spring-boot-starter'
 
-        testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
-        testCompile 'cglib:cglib-nodep:3.2.6'
-        testCompile 'org.objenesis:objenesis:2.6'
+        annotationProcessor platform("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
+        testImplementation 'org.spockframework:spock-spring:1.3-groovy-2.5'
     }
-
-    compileJava.dependsOn(processResources)
 
     task sourcesJar(type: Jar, dependsOn: classes) {
         classifier = 'sources'
@@ -73,5 +55,68 @@ configure(subprojects.findAll { !['spring-distributed-locks-example'].contains(i
     artifacts {
         archives sourcesJar
         archives javadocJar
+    }
+
+    publishing {
+        publications {
+            library(MavenPublication) {
+                from components.java
+
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom {
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'budjb'
+                            name = 'Bud Byrd'
+                            email = 'bud.byrd@gmail.com'
+                        }
+                    }
+
+                    scm {
+                        url = githubHttpsUrl
+                        connection = "scm:git:${githubHttpsUrl}.git"
+                        developerConnection = "scm:git:${githubGitUrl}"
+                    }
+
+                }
+            }
+        }
+    }
+
+    bintray {
+        user = System.getenv(bintrayUsernameEnvVar)
+        key = System.getenv(bintrayKeyEnvVar)
+        publish = true
+
+        pkg {
+            websiteUrl = githubHttpsUrl
+            issueTrackerUrl = "${githubHttpsUrl}/issues"
+            vcsUrl = githubGitUrl
+            githubRepo = 'budjb/spring-distributed-locks'
+
+            repo = 'spring'
+            name = project.name
+            licenses = ['Apache-2.0']
+            publications = ['library']
+
+            version {
+                name = project.version
+                released = new Date()
+                vcsTag = project.version
+                gpg {
+                    sign = true
+                    passphrase = System.getenv('GPG_PASSWORD')
+                }
+            }
+        }
     }
 }

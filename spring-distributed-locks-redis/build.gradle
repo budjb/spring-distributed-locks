@@ -15,83 +15,15 @@
  */
 
 dependencies {
-    compile project(':spring-distributed-locks')
-    compile 'org.redisson:redisson-spring-boot-starter:3.10.4'
+    api project(':spring-distributed-locks')
+    api 'org.redisson:redisson-spring-boot-starter:3.10.4'
 
-    optional "org.springframework.boot:spring-boot-configuration-processor"
-}
-
-publishing {
-    publications {
-        library(MavenPublication) {
-            from components.java
-
-            artifact sourcesJar
-            artifact javadocJar
-
-            groupId project.group
-            artifactId project.name
-            version project.version
-
-            pom.withXml {
-                asNode().children().last() + {
-                    resolveStrategy = DELEGATE_FIRST
-
-                    name project.name
-                    description projectDescription
-                    url githubHttpsUrl
-                    packaging 'jar'
-
-                    licenses {
-                        license {
-                            name 'The Apache License, Version 2.0'
-                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id 'budjb'
-                            name 'Bud Byrd'
-                            email 'bud.byrd@gmail.com'
-                        }
-                    }
-                    scm {
-                        url githubHttpsUrl
-                        connection "scm:git:${githubHttpsUrl}.git"
-                        developerConnection "scm:git:${githubGitUrl}"
-                    }
-                }
-            }
-        }
-    }
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
 
 bintray {
-    user = System.getenv(bintrayUsernameEnvVar)
-    key = System.getenv(bintrayKeyEnvVar)
-    publish = true
-
     pkg {
-        websiteUrl = githubHttpsUrl
-        issueTrackerUrl = "${githubHttpsUrl}/issues"
-        vcsUrl = githubGitUrl
-        githubRepo = 'budjb/spring-distributed-locks'
-
-        desc = projectDescription
+        desc = "Redis implementation of a distributed mutex locking library for Spring Boot"
         labels = ['spring-boot', 'spring-framework', 'mutex', 'redis']
-        repo = 'spring'
-        name = project.name
-        licenses = ['Apache-2.0']
-        publications = ['library']
-
-        version {
-            name = project.version
-            released = new Date()
-            vcsTag = project.version
-            gpg {
-                sign = true
-                passphrase = System.getenv('GPG_PASSWORD')
-            }
-        }
     }
 }

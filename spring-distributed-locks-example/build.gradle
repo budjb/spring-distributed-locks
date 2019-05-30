@@ -14,24 +14,19 @@
  *  limitations under the License.
  */
 
-buildscript {
-    repositories {
-        mavenCentral()
-        maven { setUrl('http://repo.spring.io/plugins-release') }
-    }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.8.RELEASE'
-    }
+plugins {
+    id 'org.springframework.boot' version '2.1.4.RELEASE'
+    id 'java'
 }
 
-apply plugin: 'java'
-apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 repositories {
     mavenCentral()
 }
 
+
 dependencies {
-    compile 'org.springframework.boot:spring-boot-starter-web'
-    compile project(':spring-distributed-locks')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation project(':spring-distributed-locks')
 }
