@@ -17,11 +17,14 @@
 package com.budjb.spring.distributed.lock.hazelcast;
 
 import com.budjb.spring.distributed.lock.DistributedLockProvider;
+import com.budjb.spring.distributed.lock.DistributedLocksAutoConfiguration;
 import com.hazelcast.core.HazelcastInstance;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AutoConfigureBefore(DistributedLocksAutoConfiguration.class)
 public class HazelcastDistributedLockAutoConfiguration {
     @Bean
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
